@@ -54,18 +54,27 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            junit 'target/surefire-reports/*.xml'
+   post {
+       always {
+           junit 'target/surefire-reports/*.xml'
 
-            publishHTML(target: [
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'target/site',
-                reportFiles: 'surefire-report.html',
-                reportName: 'Surefire HTML Report'
-            ])
-        }
-    }
+           publishHTML(target: [
+               allowMissing: true,
+               alwaysLinkToLastBuild: true,
+               keepAll: true,
+               reportDir: 'target/site',
+               reportFiles: 'surefire-report.html',
+               reportName: 'Surefire HTML Report'
+           ])
+
+           publishHTML(target: [
+               allowMissing: true,
+               alwaysLinkToLastBuild: true,
+               keepAll: true,
+               reportDir: 'target/site',
+               reportFiles: 'index.html',
+               reportName: 'Maven Site Report'
+           ])
+       }
+   }
 }

@@ -52,6 +52,11 @@ pipeline {
                 sh 'mvn site'
             }
         }
+        stage('Debug Report Files') {
+            steps {
+                sh 'find target/site -type f | sort'
+            }
+        }
     }
 
    post {

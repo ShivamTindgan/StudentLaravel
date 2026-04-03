@@ -1,3 +1,25 @@
+// pipeline {
+//     agent any
+//
+//     tools {
+//         jdk 'myjava'
+//         maven 'mymaven'
+//     }
+//
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 checkout scm
+//             }
+//         }
+//
+//         stage('Build') {
+//             steps {
+//                 sh 'mvn clean package'
+//             }
+//         }
+//     }
+// }
 pipeline {
     agent any
 
@@ -13,10 +35,37 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Clean') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean'
             }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Generate HTML Report') {
+            steps {
+                sh 'mvn site'
+            }
+        }
+    }
+
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+
+            publishHTML(target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'target/site',
+                reportFiles: 'surefire-report.html',
+                reportName: 'Surefire HTML Report'
+            ])
         }
     }
 }

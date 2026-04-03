@@ -52,11 +52,11 @@ pipeline {
                 sh 'mvn site'
             }
         }
-        stage('Debug Report Files') {
-            steps {
-                sh 'find target/site -type f | sort'
-            }
-        }
+//         stage('Debug Report Files') {
+//             steps {
+//                 sh 'find target/site -type f | sort'
+//             }
+//         }
     }
 
    post {
@@ -67,9 +67,9 @@ pipeline {
                allowMissing: true,
                alwaysLinkToLastBuild: true,
                keepAll: true,
-               reportDir: 'target/site',
-               reportFiles: 'surefire-report.html',
-               reportName: 'Surefire HTML Report'
+               reportDir: 'target/surefire-reports',
+               reportFiles: 'index.html',
+               reportName: 'Surefire Test HTML Report'
            ])
 
            publishHTML(target: [

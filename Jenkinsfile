@@ -29,27 +29,49 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout StudentLaravel') {
             steps {
-                checkout scm
+                 dir('StudentLaravel'){
+                 checkout scm
+                 }
             }
         }
+        stage('Checkout Laravel_New') {
+                    steps {
+                        dir('Laravel_New') {
+                            git branch: 'main', url: 'https://github.com/ShivamTindgan/Laravel_New.git'
+                        }
+                    }
+                }
+        stage('StudentLaravel Build/Deploy') {
+                    steps {
+                        dir('StudentLaravel') {
+                            echo 'Add your StudentLaravel stages here'
+                        }
+                    }
+                }
 
-        stage('Clean') {
+
+        stage('Clean Automation') {
             steps {
-                sh 'mvn clean'
+                dir('Laravel_New') {
+                    sh 'mvn clean'
+                }
             }
         }
-
-        stage('Test') {
+        stage('Run Automation Tests') {
             steps {
-                sh 'mvn test'
+                dir('Laravel_New') {
+                    sh 'mvn test'
+                }
             }
         }
 
         stage('Generate HTML Report') {
             steps {
-                sh 'mvn site'
+            dir('Laravel_New') {
+                   sh 'mvn site'
+               }
             }
         }
 //         stage('Debug Report Files') {
@@ -61,13 +83,13 @@ pipeline {
 
    post {
        always {
-           junit 'target/surefire-reports/*.xml'
+           junit 'Laravel_New/target/surefire-reports/*.xml'
 
            publishHTML(target: [
                allowMissing: true,
                alwaysLinkToLastBuild: true,
                keepAll: true,
-               reportDir: 'target/surefire-reports',
+               reportDir: 'Laravel_New/target/surefire-reports',
                reportFiles: 'index.html',
                reportName: 'Surefire Test HTML Report'
            ])
@@ -76,7 +98,7 @@ pipeline {
                allowMissing: true,
                alwaysLinkToLastBuild: true,
                keepAll: true,
-               reportDir: 'target/site',
+               reportDir: 'Laravel_New/target/site',
                reportFiles: 'index.html',
                reportName: 'Maven Site Report'
            ])

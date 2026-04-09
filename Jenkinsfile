@@ -27,7 +27,11 @@ pipeline {
         jdk 'myjava'
         maven 'mymaven'
     }
-
+   environment {
+        MOBILE = credentials('student_mobile')
+        OTP    = credentials('student_otp')
+        ISD    = credentials('student_isd')
+    }
     stages {
         stage('Checkout StudentLaravel') {
             steps {
